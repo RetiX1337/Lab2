@@ -18,17 +18,13 @@ public class Serializer implements Serializable {
 
     public static Object deserialize(String fileName, Class<?> clazz) throws IOException, ClassNotFoundException {
         File file = new File(fileName);
-        System.out.println("file");
         if (!file.exists()) {
             file.createNewFile();
-            System.out.println("new file");
 
         }
         FileInputStream fileInputStream = new FileInputStream(file);
-        System.out.println("file input stream");
         if (file.length() == 0) {
             try {
-                System.out.println("no file new instance");
                 fileInputStream.close();
                 return clazz.getDeclaredConstructor().newInstance();
             } catch (InstantiationException e) {
@@ -42,9 +38,7 @@ public class Serializer implements Serializable {
             }
         } else {
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-            System.out.println("object input stream");
             Object object = clazz.cast(objectInputStream.readObject());
-            System.out.println("new object with data");
             objectInputStream.close();
             fileInputStream.close();
             return object;
