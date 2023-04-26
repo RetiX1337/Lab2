@@ -3,14 +3,14 @@ package com.company.books;
 import com.company.Identifiable;
 import com.company.customer.Customer;
 
-import java.io.Serializable;
+import java.io.*;
 
-public class Book implements Identifiable, Serializable {
-    private final String name;
-    private final String author;
-    private final Integer year;
+public class Book implements Identifiable, Externalizable {
+    private String name;
+    private String author;
+    private Integer year;
     private boolean isAvailable;
-    private final BookType type;
+    private BookType type;
     private Customer customer;
     private Long id;
 
@@ -21,6 +21,10 @@ public class Book implements Identifiable, Serializable {
         this.type = type;
         isAvailable = true;
         this.customer = null;
+    }
+
+    public Book() {
+
     }
 
     public void setId(Long id) {
@@ -74,5 +78,27 @@ public class Book implements Identifiable, Serializable {
                 ", Is available: " + isAvailable +
                 ", Type: " + type +
                 ", Customer ID: " + (customer!=null?customer.getId():"none");
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeObject(id);
+        out.writeObject(name);
+        out.writeObject(author);
+        out.writeObject(year);
+        out.writeObject(isAvailable);
+        out.writeObject(type);
+        out.writeObject(customer);
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        id = (Long) in.readObject();
+        name = (String) in.readObject();
+        author = (String) in.readObject();
+        year = (Integer) in.readObject();
+        isAvailable = (boolean) in.readObject();
+        type = (BookType) in.readObject();
+        customer = (Customer) in.readObject();
     }
 }

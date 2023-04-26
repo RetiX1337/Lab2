@@ -9,11 +9,11 @@ public class DependencyManager {
     private final Library library;
 
     public DependencyManager() {
-        CustomerList deserializedCustomerList = null;
-        BookList deserializedBookList = null;
+        CustomerList deserializedCustomerList = new CustomerList();
+        BookList deserializedBookList = new BookList();
         try {
-            deserializedCustomerList = (CustomerList) Serializer.deserialize("customerList.bin", CustomerList.class);
-            deserializedBookList = (BookList) Serializer.deserialize("bookList.bin", BookList.class);
+            Serializer.deserialize(deserializedCustomerList, "customerList.bin");
+            Serializer.deserialize(deserializedBookList, "bookList.bin");
         } catch (IOException e) {
             System.out.println("IO exception");
             e.printStackTrace();
@@ -25,8 +25,9 @@ public class DependencyManager {
 
     public void serializeObjects() {
         try {
-            Serializer.serialize(library.getCustomerList(), "customerList.bin", CustomerList.class);
-            Serializer.serialize(library.getBookList(), "bookList.bin", BookList.class);
+            Serializer.serialize(library.getCustomerList(), "customerList.bin");
+            Serializer.serialize(library.getBookList(), "bookList.bin");
+            Serializer.serialize(library, "library.bin");
         } catch (IOException e) {
             e.printStackTrace();
         }

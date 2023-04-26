@@ -5,11 +5,11 @@ import com.company.books.BookList;
 import com.company.customer.Customer;
 import com.company.customer.CustomerList;
 
-import java.io.Serializable;
+import java.io.*;
 
-public class Library implements Serializable {
-    private final BookList bookList;
-    private final CustomerList customerList;
+public class Library implements Externalizable {
+    private BookList bookList;
+    private CustomerList customerList;
 
     public Library(BookList bookList, CustomerList customerList) {
         this.bookList = bookList;
@@ -27,5 +27,17 @@ public class Library implements Serializable {
 
     public CustomerList getCustomerList() {
         return customerList;
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeObject(bookList);
+        out.writeObject(customerList);
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        bookList = (BookList) in.readObject();
+        customerList = (CustomerList) in.readObject();
     }
 }

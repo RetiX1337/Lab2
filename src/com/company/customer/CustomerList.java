@@ -2,13 +2,17 @@ package com.company.customer;
 
 import com.company.customer.Customer;
 
-import java.io.Serializable;
+import java.io.*;
 import java.util.Collection;
 import java.util.HashMap;
 
-public class CustomerList implements Serializable {
-    private final HashMap<Long, Customer> customerList = new HashMap<>();
+public class CustomerList implements Externalizable {
+    private HashMap<Long, Customer> customerList = new HashMap<>();
     private Long idCounter = 0L;
+
+    public CustomerList() {
+
+    }
 
     public Customer save(Customer customer) {
         customer.setId(idCounter);
@@ -27,5 +31,23 @@ public class CustomerList implements Serializable {
 
     public Collection<Customer> findAll() {
         return customerList.values();
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeObject(customerList);
+        for (Customer c : customerList.values()) {
+            c.writeExternal(out);
+        }
+        out.writeLong(idCounter);
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        customerList = (HashMap<Long, Customer>) in.readObject();
+        for (Customer c : customerList.values()) {
+            c.readExternal(in);
+        }
+        idCounter = in.readLong();
     }
 }
