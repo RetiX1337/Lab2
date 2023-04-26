@@ -3,11 +3,9 @@ package com.company.customer;
 import com.company.Identifiable;
 import com.company.books.Book;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
-public class Customer implements Identifiable, Serializable {
+public class Customer implements Identifiable {
     private Long id;
     private final String phoneNumber;
     private final ArrayList<Book> lentBooks = new ArrayList<>();

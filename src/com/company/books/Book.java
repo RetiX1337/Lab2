@@ -5,7 +5,7 @@ import com.company.customer.Customer;
 
 import java.io.Serializable;
 
-public class Book implements Identifiable, Serializable {
+public class Book implements Identifiable {
     private final String name;
     private final String author;
     private final Integer year;
