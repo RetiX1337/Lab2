@@ -1,6 +1,4 @@
-package com.company.books;
-
-import com.company.books.Book;
+package com.company;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -8,30 +6,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class BookList implements Serializable {
-    private final HashMap<Long, Book> bookList = new HashMap<>();
+public class BookContainer implements Serializable {
+    private final HashMap<Long, Book> bookContainer = new HashMap<>();
     private static Long idCounter = 0L;
 
     public Book save(Book book) {
         book.setId(idCounter);
-        bookList.put(idCounter, book);
+        bookContainer.put(idCounter, book);
         idCounter++;
         return book;
     }
 
     public void delete(Book book) {
-        bookList.remove(book.getId());
+        bookContainer.remove(book.getId());
     }
 
     public Book findById(Long id) {
-        return bookList.get(id);
+        return bookContainer.get(id);
     }
 
     public Collection<Book> findAll() {
-        return bookList.values();
+        return bookContainer.values();
     }
 
     public List<Book> findByType(BookType bookType) {
-        return bookList.values().stream().filter(book -> book.getType().equals(bookType)).collect(Collectors.toList());
+        return bookContainer.values().stream().filter(book -> book.getType().equals(bookType)).collect(Collectors.toList());
     }
 }

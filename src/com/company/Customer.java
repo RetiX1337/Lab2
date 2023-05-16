@@ -1,16 +1,12 @@
-package com.company.customer;
-
-import com.company.Identifiable;
-import com.company.books.Book;
+package com.company;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
-public class Customer implements Identifiable, Serializable {
+public class Customer implements Identifiable {
     private Long id;
     private final String phoneNumber;
-    private final ArrayList<Book> lentBooks = new ArrayList<>();
+    private final ArrayList<Book> books = new ArrayList<>();
     private final String name;
 
     public Customer(String name, String phoneNumber) {
@@ -19,27 +15,27 @@ public class Customer implements Identifiable, Serializable {
     }
 
     public void addBook(Book book) {
-        lentBooks.add(book);
+        books.add(book);
     }
 
     public String getName() {
         return name;
     }
 
-    public String getPhoneNumber() {
+    public String getPhone() {
         return phoneNumber;
     }
 
-    public ArrayList<Book> getLentBooks() {
-        return lentBooks;
+    public ArrayList<Book> getBooks() {
+        return books;
     }
 
     @Override
     public String toString() {
         return "ID: " + id +
-                ", Name: " + name +
-                ", IDs of lent books: " + lentBooks.stream().map(Book::getId).toList() +
-                ", Phone number: " + phoneNumber;
+                ", Ім'я: " + name +
+                ", ID узятих книг: " + books.stream().map(Book::getId).toList() +
+                ", Номер телефону: " + phoneNumber;
     }
 
     @Override

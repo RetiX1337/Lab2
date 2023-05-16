@@ -1,11 +1,8 @@
-package com.company.books;
-
-import com.company.Identifiable;
-import com.company.customer.Customer;
+package com.company;
 
 import java.io.Serializable;
 
-public class Book implements Identifiable, Serializable {
+public class Book implements Identifiable {
     private final String name;
     private final String author;
     private final Integer year;
@@ -68,11 +65,11 @@ public class Book implements Identifiable, Serializable {
     @Override
     public String toString() {
         return "ID: " + id +
-                ", Name: " + name  +
-                ", Author: " + author +
-                ", Year: " + year +
-                ", Is available: " + isAvailable +
-                ", Type: " + type +
-                ", Customer ID: " + (customer!=null?customer.getId():"none");
+                ", Назва: " + name  +
+                ", Автор: " + author +
+                ", Рік: " + year +
+                ", Доступно: " + (isAvailable?"Так":"Ні") +
+                ", Тип: " + BookType.getName(type) +
+                ", ID клієнта: " + (customer!=null?customer.getId():"Немає");
     }
 }
