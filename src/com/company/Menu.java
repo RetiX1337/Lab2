@@ -1,72 +1,75 @@
 package com.company;
 
+import com.company.books.Book;
+import com.company.books.BookType;
+import com.company.customer.Customer;
+
 import java.util.List;
 
 public class Menu {
-    public static void menu(Configurator configurator) {
+    public static void menu(DependencyManager dependencyManager) {
         while (true) {
-            System.out.println("""
-                    1) Додати книгу\s
-                    2) Показати список книг\s
-                    3) Знайти книгу по ID\s
-                    4) Знайти книгу за типом\s
-                    5) Здати книгу\s
-                    6) Повернути книгу
-                    7) Додати клієнта\s
-                    8) Показати клієнтів\s
-                    9) Знайти клієнта за ID""");
+            System.out.println("1. Add a book");
+            System.out.println("2. Show books");
+            System.out.println("3. Find a book by ID");
+            System.out.println("4. Find a book by type");
+            System.out.println("5. Lend a book");
+            System.out.println("6. Return a book");
+            System.out.println("7. Add a customer");
+            System.out.println("8. Show customers");
+            System.out.println("9. Find a customer by ID");
             switch (getInt()) {
                 case 1 -> {
-                    System.out.println("Введіть назву книги: ");
+                    System.out.println("Enter the name of a book: ");
                     String name = Main.scanner.nextLine();
-                    System.out.println("Введіть автора: ");
+                    System.out.println("Enter the name of author: ");
                     String author = Main.scanner.nextLine();
-                    System.out.println("Введіть рік виготовлення: ");
+                    System.out.println("Enter the year of production: ");
                     Integer year = getInt();
                     BookType bookType = chooseBookType();
-                    configurator.getLibrary().getBookContainer().save(new Book(name, author, year, bookType));
-                    configurator.serializeObjects();
+                    dependencyManager.getLibrary().getBookList().save(new Book(name, author, year, bookType));
+                    dependencyManager.serializeObjects();
                 }
-                case 2 -> configurator.getLibrary().getBookContainer().findAll().forEach(System.out::println);
-                case 3 -> System.out.println(configurator.getLibrary().getBookContainer().findById((long) getInt()));
-                case 4 -> configurator.getLibrary().getBookContainer().findByType(chooseBookType()).forEach(System.out::println);
+                case 2 -> dependencyManager.getLibrary().getBookList().findAll().forEach(System.out::println);
+                case 3 -> System.out.println(dependencyManager.getLibrary().getBookList().findById((long) getInt()));
+                case 4 -> dependencyManager.getLibrary().getBookList().findByType(chooseBookType()).forEach(System.out::println);
                 case 5 -> {
-                    System.out.println("Обрати клієнта");
-                    configurator.getLibrary().getCustomerContainer().findAll().forEach(System.out::println);
+                    System.out.println("Choose a customer");
+                    dependencyManager.getLibrary().getCustomerList().findAll().forEach(System.out::println);
                     Long customerId = (long) getInt();
-                    System.out.println("Обрати книгу");
-                    configurator.getLibrary().getBookContainer().findAll().forEach(System.out::println);
+                    System.out.println("Choose a book");
+                    dependencyManager.getLibrary().getBookList().findAll().forEach(System.out::println);
                     Long bookId = (long) getInt();
-                    configurator
+                    dependencyManager
                             .getLibrary()
-                            .lendBook(configurator.getLibrary().getBookContainer().findById(bookId),
-                                    configurator.getLibrary().getCustomerContainer().findById(customerId));
-                    configurator.serializeObjects();
+                            .lendBook(dependencyManager.getLibrary().getBookList().findById(bookId),
+                                    dependencyManager.getLibrary().getCustomerList().findById(customerId));
+                    dependencyManager.serializeObjects();
                 }
                 case 6 -> {
-                    System.out.println("Обрати клієнта");
-                    configurator.getLibrary().getCustomerContainer().findAll().forEach(System.out::println);
+                    System.out.println("Choose a customer");
+                    dependencyManager.getLibrary().getCustomerList().findAll().forEach(System.out::println);
                     Long customerId = (long) getInt();
-                    List<Book> lentBooks = configurator.getLibrary().getCustomerContainer().findById(customerId).getBooks();
-                    System.out.println("Обрати книгу");
+                    List<Book> lentBooks = dependencyManager.getLibrary().getCustomerList().findById(customerId).getLentBooks();
+                    System.out.println("Choose a book to return");
                     for (int i = 0; i < lentBooks.size(); i++) {
                         System.out.println(i + ". " + lentBooks.get(i));
                     }
                     Long bookId = (long) getInt();
-                    configurator.getLibrary().getCustomerContainer().findById(customerId).getBooks().get(bookId.intValue()).deleteCustomer();
-                    configurator.getLibrary().getCustomerContainer().findById(customerId).getBooks().remove(bookId.intValue());
-                    configurator.serializeObjects();
+                    dependencyManager.getLibrary().getCustomerList().findById(customerId).getLentBooks().get(bookId.intValue()).deleteCustomer();
+                    dependencyManager.getLibrary().getCustomerList().findById(customerId).getLentBooks().remove(bookId.intValue());
+                    dependencyManager.serializeObjects();
                 }
                 case 7 -> {
-                    System.out.println("Введіть ім'я клієнта: ");
+                    System.out.println("Enter the customer's name: ");
                     String name = Main.scanner.nextLine();
-                    System.out.println("Введіть номер телефону клієнта: ");
+                    System.out.println("Enter the customer's phone number: ");
                     String phone = Main.scanner.nextLine();
-                    configurator.getLibrary().getCustomerContainer().save(new Customer(name, phone));
-                    configurator.serializeObjects();
+                    dependencyManager.getLibrary().getCustomerList().save(new Customer(name, phone));
+                    dependencyManager.serializeObjects();
                 }
-                case 8 -> configurator.getLibrary().getCustomerContainer().findAll().forEach(System.out::println);
-                case 9 -> System.out.println(configurator.getLibrary().getCustomerContainer().findById((long) getInt()));
+                case 8 -> dependencyManager.getLibrary().getCustomerList().findAll().forEach(System.out::println);
+                case 9 -> System.out.println(dependencyManager.getLibrary().getCustomerList().findById((long) getInt()));
             }
         }
     }
@@ -76,9 +79,9 @@ public class Menu {
     }
 
     private static BookType chooseBookType() {
-        System.out.println("Оберіть тип книги: ");
+        System.out.println("Choose a type of book: ");
         for (int i = 0; i < BookType.values().length; i++) {
-            System.out.println(i + ". " + BookType.getName(BookType.values()[i]));
+            System.out.println(i + ". " + BookType.values()[i]);
         }
         return BookType.values()[getInt()];
     }
